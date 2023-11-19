@@ -2,11 +2,11 @@
 #include <manejoArchivos.h>
 #include <funcAux.h>
 
-#define CSV_CLASES "iriClasesGYM.csv"
-#define CSV_CLIENTES "iriClientesGYM.csv"
+#define CSV_CLASES "../iriClasesGYM.csv"
+#define CSV_CLIENTES "../iriClientesGYM.csv"
 #define BINARIO "asistencias_1697673600000.dat"
 
-int main(int argc, char *argv[]) {
+int main() {
     
             /*-------- DECLARACIÓN Y APERTURA DE ARCHIVOS --------*/
     ifstream archivo_clases;
