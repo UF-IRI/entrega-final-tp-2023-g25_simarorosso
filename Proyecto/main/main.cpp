@@ -9,6 +9,10 @@
 int main() {
     
             /*-------- DECLARACIÓN Y APERTURA DE ARCHIVOS --------*/
+
+    ofstream generar_binario_buenardo;
+    generar_binario_buenardo.open(BINARIO, ios::binary | ios::app); // IOS::APP PARA MANDAR EL CURSOR AL FINAL
+
     ifstream archivo_clases;
     archivo_clases.open(CSV_CLASES);
 
@@ -18,17 +22,32 @@ int main() {
     ifstream archivo_datos_clientes;
     archivo_datos_clientes.open(CSV_CLIENTES);
 
+    unsigned int n_asistencias = sizeof(infile_b)/sizeof(Asistencia);
     unsigned int nclientes = largo_archivo(archivo_datos_clientes);
     unsigned int nclases = largo_archivo(archivo_clases);
+    unsigned int i,j;
 
     Clientes *array_clientes = new Clientes [nclientes];
     Clases *array_clases = new Clases [nclases];
     Asistencia *array_asistencia = new Asistencia [nclientes];
     Cupo *control_cupos = new Cupo [nclases]; //VARIABLE QUE TIENE IGUAL ESPACIO QUE LAS CLASES EN LA QUE SE VA CONTROLANDO LA CANTIDAD DE RESERVAS
-    //unsigned int n_asistencias = sizeof(infile_b)/sizeof(Asistencia);
+    Asistencia *datos_archivo_asistencia = new Asistencia [n_asistencias];
 
-    leer_archivo_clases(archivo_clases,array_clases);
+
+
+    /*VACIO E INICIALIZO LOS ARRAYS DE ASISTENCIAS E INSCRIPCIONES CON LOS QUE VOY A TRABAJAR*/
+    for(i=0; i<nclientes; i++){
+        array_asistencia[i].cantInscriptos = 0;
+        array_asistencia[i].CursosInscriptos = nullptr;
+    }
+    for(i=0; i<n_asistencias; i++){
+        datos_archivo_asistencia[i].cantInscriptos = 0;
+        datos_archivo_asistencia[i].CursosInscriptos = nullptr;
+    }
+
     leer_archivo_clientes(archivo_datos_clientes,array_clientes);
+    leer_archivo_clases(archivo_clases,array_clases);
+    leer_archivo_binario(infile_b,datos_archivo_asistencia,n_asistencias);
 
 
             /*-------- SE INICIALIZAN LOS CUPOS DE CADA CLASE --------*/
@@ -41,7 +60,6 @@ int main() {
     unsigned int max_boxeo = 30;
     unsigned int max_musculacion = 30;
 
-    unsigned int i,j;
 
     for(i=0; i<nclases;i++)
     {
@@ -97,44 +115,67 @@ int main() {
 
     srand (time(NULL));
 
+    /*VARIABLES AUXILIARES*/
+    unsigned int aux1;
+    unsigned int aux2;
+    time_t aux3;
+    bool rta;
+
     for( i = 0; i<nclientes; i++)
     {
 
         //VOY CARGANDO LOS DATOS EN EL ARRAY DE ASISTENCIAS
 
-        int cantInscriptos_aux = rand() %4 + 1;//ACOTADO ENTRE 1 Y 4 PARA PROBAR SIMPLEMENTE
+        //cantInscriptos_aux = rand()% (4-1+1)+1;//ACOTADO ENTRE 1 Y 4 PARA PROBAR SIMPLEMENTE
+        aux1 = 1+ rand()%4;
 
         array_asistencia[i].idCliente = array_clientes[i].idCliente;
-        array_asistencia[i].cantInscriptos = cantInscriptos_aux;  //ACOTADO ENTRE 1 Y 4 PARA PROBAR SIMPLEMENTE
+        array_asistencia[i].cantInscriptos = aux1;   //ACOTADO ENTRE 1 Y 4 PARA PROBAR SIMPLEMENTE
+    }
 
-        asignar_espacios_inscripciones_individual(array_asistencia[i]);
+    asignar_espacios_inscripciones(array_asistencia,nclientes);
 
-        for( j=0; j< array_asistencia[i].cantInscriptos; j++)
+    for(i=0; i<nclientes; i++){
+        for( j=0; j<array_asistencia[i].cantInscriptos; j++)
         {
-            int id_aux = rand() %251 + 1;
-            time_t hora_inscrip_aux = rand() %100000000000 + 1000000000;
 
-            Inscripcion auxiliar;
-            auxiliar.idCurso = id_aux;
-            auxiliar.fechaInscripcion = hora_inscrip_aux;
+            aux2 = 1 +  rand()%120;
+            aux3 = 1000000000 + (rand() * 700);
 
-            array_asistencia[i].CursosInscriptos[j] = auxiliar;
+            array_asistencia[i].CursosInscriptos[j].idCurso = aux2;
+
+            array_asistencia[i].CursosInscriptos[j].fechaInscripcion = aux3;
         }
     }
 
     /*---------* SEGUNDA PARTE --> CORROBORAR DATOS Y QUE NO ESTEN REPETIDOS *---------*/
 
+    for(i=0; i<nclientes; i++)
+    {
+        for(j=0; j<array_asistencia[i].cantInscriptos;)
+        {
+            rta = existencia_clase(array_asistencia[i].CursosInscriptos[j].idCurso, nclases);
 
+            if( rta == false ) //SI ALGUNA DE LAS CLASES QUE RESERVÓ EL CLIENTE NO ESTA ENTRE LOS RANGOS VÁLIDO LA SACAMOS
+            {
+                eliminar(array_asistencia[i].CursosInscriptos, array_asistencia[i].cantInscriptos,j);
+            }
+            else
+                j++; //COMO AL ELIMINAR UN ELEMENTO TENGO QUE RECORRER UNO MENOS, SOLO INCREMENTO LA 'j' SI NO ELIMINÉ UNO
+        }
+    }
+    int pos, pos_repetido;
+    double segundos;
 
+    for(i=0; i<nclientes; i++)
+    {
 
-    for( i=0; i<nclientes;i++){
-
-        int pos = buscar_idclases_repetidos(array_asistencia[i].CursosInscriptos, array_asistencia[i].cantInscriptos);
+        pos = buscar_idclases_repetidos(array_asistencia[i].CursosInscriptos, array_asistencia[i].cantInscriptos);
 
         if(pos != -1){ //Si encontró 2 id de clase repetidos
 
-            int pos_repetido = buscar_repetidos_eliminar(array_asistencia[i].CursosInscriptos, array_asistencia[i].cantInscriptos);
-            double segundos = difftime(array_asistencia[i].CursosInscriptos[pos].fechaInscripcion , array_asistencia[i].CursosInscriptos[pos_repetido].fechaInscripcion);
+            pos_repetido = buscar_repetidos_eliminar(array_asistencia[i].CursosInscriptos, array_asistencia[i].cantInscriptos);
+            segundos = difftime(array_asistencia[i].CursosInscriptos[pos].fechaInscripcion , array_asistencia[i].CursosInscriptos[pos_repetido].fechaInscripcion);
 
             if(segundos<0.0)//el que tengo que borrar es el segundo, la reserva se realizo despues
             {
@@ -155,7 +196,7 @@ int main() {
 
         if(pos != -1){ //POS != -1 SIGNIFICA QUE ENCONTRÓ 2 REPETIDOS
 
-            int pos_repetido = buscar_mismo_horario_clase_repetido(array_asistencia[i].CursosInscriptos,array_asistencia[i].cantInscriptos,array_clases,nclases);
+            int pos_repetido = buscar_mismo_horario_clase_repetido(array_asistencia[i].CursosInscriptos,array_asistencia[i].cantInscriptos,array_clases,nclases); //BUSCO EL OTRO QUE TIENE MISMO HORARIO
             double segundos = difftime(array_asistencia[i].CursosInscriptos[pos].fechaInscripcion , array_asistencia[i].CursosInscriptos[pos_repetido].fechaInscripcion);
 
             if(segundos<0.0) //el que tengo que borrar es el segundo, la reserva se realizo despues
@@ -170,6 +211,50 @@ int main() {
         }
     }
 
+    /*SE ACTUALIZA EL CUPO DE LAS RESERVAS ANTERIORES*/
+    for(i=0; i<n_asistencias; i++)
+    {
+        for(j=0; j<array_asistencia[i].cantInscriptos; j++)
+        {
+            actualizar_cupo(control_cupos,nclases,datos_archivo_asistencia[i].CursosInscriptos[j].idCurso);
+        }
+    }
+
+    /*SE ACTUALIZA EL CUPO DE LAS NUEVAS RESERVAS*/
+    for(i=0; i<nclientes; i++)
+    {
+        for(j=0; j<array_asistencia[i].cantInscriptos; j++)
+        {
+            actualizar_cupo(control_cupos,nclases,array_asistencia[i].CursosInscriptos[j].idCurso);
+        }
+    }
+
+    for( i=0; i<nclientes;i++) //SI EL CLIENTE NO TIENE LA CUOTA AL DÍA LO DAMOS DE BAJA DE TODOS LOS CURSOS EN LOS QUE ESTÉ
+    {
+        if( EstadoPos(array_clientes, array_asistencia[i].idCliente,nclientes) == false)
+        {
+            for(j=0; j<array_asistencia[i].cantInscriptos; j++)
+            {
+                actualizar_cupo_restar(control_cupos,nclases,array_asistencia[i].CursosInscriptos[j].idCurso);
+            }
+        }
+    }
+    for( i=0; i<n_asistencias; i++) //SI EL CLIENTE NO TIENE LA CUOTA AL DÍA LO DAMOS DE BAJA DE TODOS LOS CURSOS EN LOS QUE ESTÉ
+    {
+        if( EstadoPos(array_clientes, datos_archivo_asistencia[i].idCliente,n_asistencias) == false)
+        {
+            for(j=0; j<datos_archivo_asistencia[i].cantInscriptos; j++)
+            {
+                actualizar_cupo_restar(control_cupos,nclases,datos_archivo_asistencia[i].CursosInscriptos[j].idCurso);
+            }
+        }
+    }
+
+    /*UNA VEZ PROCESADAS Y FILTRADAS TODAS LAS RESERVAS, GENERAMOS EL ARCHIVO BINARIO*/
+
+    escribir_bin(generar_binario_buenardo,array_asistencia,nclientes);
+
+
 /*-------------------------------------------------------------------------------------------------------- --------------------------------------------------------------------------------------------------------*/
 
         /*-------- SE LIBERA LA MEMORIA RESERVADA Y SE CIERRAN LOS ARCHIVOS --------*/
@@ -178,6 +263,12 @@ int main() {
         delete [] array_asistencia[i].CursosInscriptos;
     }
 
+    for(i=0;i<n_asistencias;i++)
+    {
+        delete [] datos_archivo_asistencia[i].CursosInscriptos;
+    }
+
+    delete [] datos_archivo_asistencia;
     delete [] array_asistencia;
     delete [] control_cupos;
     delete [] array_clases;
@@ -186,8 +277,11 @@ int main() {
     archivo_datos_clientes.close();
     archivo_clases.close();
     infile_b.close();
+    generar_binario_buenardo.close();
+
 /*-------------------------------------------------------------------------------------------------------- --------------------------------------------------------------------------------------------------------*/
 
     cout<<"Exito!!!"<<endl;
+
     return 0;
 }

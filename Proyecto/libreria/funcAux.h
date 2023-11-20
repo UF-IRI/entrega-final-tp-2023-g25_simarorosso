@@ -8,12 +8,11 @@ bool identificar_menores(string);
 bool existencia_clase(unsigned int , int);
 bool chequear_letras_nombres (string);
 bool ExistenciaPersona(Clientes *, int, unsigned int);
-bool EstadoPos(int );
+bool EstadoPos(Clientes *array_clientes, unsigned int Id_cliente, unsigned int nclientes);
 
 
 /*LEECTURA DE DATOS DE ARCHIVOS*/
 void asignar_espacios_inscripciones (Asistencia *array_asistencia, unsigned int n_asistencias);
-void terminar_de_leer_archivo_binario (ifstream &archivo, Asistencia *array_asistencia, unsigned int n_asistencias);
 
 /*FUNCIONES QUE REVISAN QUE NO TENGA 2 CLASES EN EL MISMO HORARIO*/
 float buscar_horario_clase(Clases *array_clases, unsigned int idClase, unsigned int nclases); //LE DOY UN ID DE CLASE, ME DEVUELVE SU HORARIO ----> FUNCIONA BIEN
@@ -27,7 +26,7 @@ int buscar_repetidos_eliminar (Inscripcion *inscripciones_cliente, unsigned int 
 /*FUNCIONES DE CONTROL Y ORGANIZACION*/
 void eliminar(Inscripcion *array_inscripcion, unsigned int &cantInscriptos, unsigned int eliminar);//----> FUNCIONA LOCOOOOOOO
 bool actualizar_cupo (Cupo *control_cupos, unsigned int nclases ,unsigned int Id_clase); //INFORMA SI SE PUDO REALIZAR LA RESERVA Y SI HAY CUPOS DISPONIBLES ( NO HAY CUPOS -->  false  || SE PUDO RESERVAS --> true )
-void asignar_espacios_inscripciones_individual (Asistencia asistencia);
+bool actualizar_cupo_restar (Cupo *control_cupos, unsigned int nclases, unsigned int Id_clase);
 
 //void resize_clientes (Clientes *&array_clientes, int &nclientes);
 
