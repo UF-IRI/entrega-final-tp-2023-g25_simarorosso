@@ -1,6 +1,6 @@
 #include <libreria.h>
-#include <manejoArchivos.h>
-#include <funcAux.h>
+#include <manejoArchivos.cpp>
+#include <funcAux.cpp>
 
 #define CSV_CLASES "../iriClasesGYM.csv"// :(
 #define CSV_CLIENTES "../iriClientesGYM.csv"

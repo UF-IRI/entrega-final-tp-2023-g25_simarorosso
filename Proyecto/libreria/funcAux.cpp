@@ -225,7 +225,7 @@ bool EstadoPos(Clientes *array_clientes, unsigned int Id_cliente, unsigned int n
     {
         if(array_clientes[i].idCliente == Id_cliente)
         {
-            if(array_clientes[i].estado <= 0)
+            if(array_clientes[i].estado >= 0)
             {
                 return true;
             }
