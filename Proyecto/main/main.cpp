@@ -2,7 +2,7 @@
 #include <manejoArchivos.h>
 #include <funcAux.h>
 
-#define CSV_CLASES "../iriClasesGYM.csv"//Rescatando el trabajodasdaas
+#define CSV_CLASES "../iriClasesGYM.csv"// :(
 #define CSV_CLIENTES "../iriClientesGYM.csv"
 #define BINARIO "asistencias_1697673600000.dat"
 
