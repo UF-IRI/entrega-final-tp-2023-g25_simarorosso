@@ -5,9 +5,9 @@
 
 /*FILTROS PARA LOS DATOS*/
 bool identificar_menores(string);
-bool existencia_clase(unsigned int , int);
+bool existencia_clase(unsigned int ,unsigned int);
 bool chequear_letras_nombres (string);
-bool ExistenciaPersona(Clientes *, int, unsigned int);
+bool ExistenciaPersona(Clientes *,unsigned int, unsigned int);
 bool EstadoPos(Clientes *array_clientes, unsigned int Id_cliente, unsigned int nclientes);
 
 
