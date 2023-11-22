@@ -1,4 +1,5 @@
 #include <libreria.h>
+#include <manejoArchivos.h>
 
 unsigned int largo_archivo (ifstream &archivo_clientes)
 {

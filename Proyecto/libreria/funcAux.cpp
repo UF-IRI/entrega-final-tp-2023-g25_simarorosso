@@ -16,9 +16,9 @@ bool identificar_menores(string fecha)
 
 }
 
-bool existencia_clase(unsigned int ID, int nclases)
+bool existencia_clase(unsigned int ID,unsigned int nclases)
 {
-    if(ID > 0 && ID < nclases)
+    if(ID < nclases)
     {
         return true;
     }
@@ -46,7 +46,7 @@ bool chequear_letras_nombres (string nombre_cliente)
     return true;
 }
 
-bool ExistenciaPersona(Clientes *array_clientes, int nclientes, unsigned int IDBuscado){
+bool ExistenciaPersona(Clientes *array_clientes, unsigned int nclientes, unsigned int IDBuscado){
     Clientes *aux= array_clientes;// para no perder el punt de la cabeza del array
     Clientes *ultimo= (array_clientes + nclientes -1);//busco la ultima posicion del array de clases
     while(aux != ultimo){//hasta que llegue al final

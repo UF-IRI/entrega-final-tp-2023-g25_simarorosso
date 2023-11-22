@@ -1,10 +1,12 @@
 #include <libreria.h>
-#include <manejoArchivos.h>
-#include <funcAux.h>
+#include <manejoArchivos.cpp>
+#include <funcAux.cpp>
 
-#define CSV_CLASES "../iriClasesGYM.csv"// :(
-#define CSV_CLIENTES "../iriClientesGYM.csv"
+#define CSV_CLASES "iriClasesGYM.csv"// :(
+#define CSV_CLIENTES "iriClientesGYM.csv"
 #define BINARIO "asistencias_1697673600000.dat"
+
+/*ES DE ESPERAR QUE SALGA "SEGMENTATION FAULT". SI NUNCA PUEDE LEER EL ARCHIVO Y VER QUÉ TAN LARGO ES PARA GENERAR LOS ARRAYS DINÁMICOS, A LA HORA DE LLENAR ESOS ARRAYS VA A APARECER EL ERROR*/
 
 int main() {
     
