@@ -49,8 +49,6 @@ using namespace std;
 
 //DAIOWNDOINWODINAWOD
 void asignar_espacios_inscripciones (Asistencia *array_asistencia, unsigned int n_asistencias);
-void terminar_de_leer_archivo_binario (ifstream &archivo, Asistencia *array_asistencia, unsigned int n_asistencias);
-
 
 /*FUNCIONES PARA MANEJO DE ARCHIVOS*/
 unsigned int largo_archivo(ifstream &archivo);
@@ -86,8 +84,8 @@ using namespace std;
 int main()
 {
 
-   /* ofstream generar_binario_buenardo;
-    generar_binario_buenardo.open(texxxt, ios::binary | ios::app); // IOS::APP PARA MANDAR EL CURSOR AL FINAL*/
+    ofstream generar_binario_buenardo;
+    generar_binario_buenardo.open(texxxt, ios::binary | ios::app); // IOS::APP PARA MANDAR EL CURSOR AL FINAL
 
     ifstream archivo_clases;
     archivo_clases.open(CSV_CLASES);
@@ -340,7 +338,7 @@ int main()
             }
         }*/
 
-   // escribir_bin(generar_binario_buenardo,array_asistencia,nclientes);
+    escribir_bin(generar_binario_buenardo,array_asistencia,nclientes);
 
 
         for(i=0; i<nclientes;i++)
@@ -362,7 +360,7 @@ int main()
     archivo_datos_clientes.close();
     archivo_clases.close();
     infile_b.close();
-    //generar_binario_buenardo.close();
+    generar_binario_buenardo.close();
 
 
 
