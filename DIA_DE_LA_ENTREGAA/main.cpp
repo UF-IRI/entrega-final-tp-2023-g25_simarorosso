@@ -6,7 +6,7 @@
 #define CSV_CLASES "iriClasesGYM.csv"
 #define CSV_CLIENTES "iriClientesGYM.csv"
 #define BINARIO "asistencias_1697673600000.dat"
-#define texxxt "ProbandoProbando.txt"
+#define NUEVO_BINARIO "ProbandoProbando.dat"
 
 using namespace std;
 
@@ -85,7 +85,7 @@ int main()
 {
 
     ofstream generar_binario_buenardo;
-    generar_binario_buenardo.open(texxxt, ios::binary | ios::app); // IOS::APP PARA MANDAR EL CURSOR AL FINAL
+    generar_binario_buenardo.open(NUEVO_BINARIO, ios::binary | ios::app); // IOS::APP PARA MANDAR EL CURSOR AL FINAL
 
     ifstream archivo_clases;
     archivo_clases.open(CSV_CLASES);
